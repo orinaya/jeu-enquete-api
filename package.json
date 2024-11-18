@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "node": "^18.20.5"
+  },
+  "name": "jeu-enquete-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
