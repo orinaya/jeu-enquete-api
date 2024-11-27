@@ -47,20 +47,21 @@ class Location {
 }
 
 class Item {
-  constructor(object_id, object_name, object_description) {
-    this.object_id = object_id;
-    this.object_name = object_name;
-    this.object_description = object_description;
+  constructor(item_id, item_name, item_description) {
+    this.item_id = item_id;
+    this.item_name = item_name;
+    this.item_description = item_description;
   }
 }
 
 class Clue {
-  constructor(clue_id, clue_name, clue_description, clue_type) {
+  constructor(clue_id, clue_name, clue_description) {
     this.clue_id = clue_id;
     this.clue_name = clue_name;
     this.clue_description = clue_description;
   }
 }
+
 // DATAS
 const characters = [
   new Character(
@@ -154,4 +155,4 @@ const clues = [
   new Clue(8, `Cristaux magiques`, `Indiquent une activité magique récente.`),
 ];
 
-module.exports = { characters, locations, items, clues, Character, Location, Item, Clue };
+module.exports = { Character, Location, Item, Clue, characters, locations, items, clues };

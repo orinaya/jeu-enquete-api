@@ -1,16 +1,13 @@
 {
-  "dependencies": {
-    "node": "^18.20.5"
-  },
   "name": "jeu-enquete-api",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "devDependencies": {},
+  "private": true,
   "scripts": {
-    "start": "node index.js"
+    "start": "node app.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "debug": "^4.3.7",
+    "express": "^4.21.1"
+  }
 }
