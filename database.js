@@ -1,3 +1,5 @@
+var bcrypt = require("bcrypt");
+
 // ENUM
 const Races = {
   DWARF: "Dwarf",
@@ -14,6 +16,15 @@ const Classes = {
 };
 
 // CLASS
+class User {
+  constructor(user_id, name, password = "", isAuthorized = false) {
+    this.user_id = user_id;
+    this.name = name;
+    this.password = bcrypt.hashSync(password, 5);
+    this.isAuthorized = isAuthorized;
+  }
+}
+
 class Character {
   constructor(
     character_id,
@@ -63,6 +74,13 @@ class Clue {
 }
 
 // DATAS
+const users = [
+  new User(1, "astarion", "Dolor1@", false),
+  new User(2, "eldrin", "Venenum1@", true),
+  new User(3, "karlach", "Ignis1@", false),
+  new User(4, "shadowheart", "Parabellum1@", false),
+];
+
 const characters = [
   new Character(
     1,
@@ -155,4 +173,4 @@ const clues = [
   new Clue(8, `Cristaux magiques`, `Indiquent une activité magique récente.`),
 ];
 
-module.exports = { Character, Location, Item, Clue, characters, locations, items, clues };
+module.exports = { Character, Location, Item, Clue, User, characters, locations, items, clues, users };

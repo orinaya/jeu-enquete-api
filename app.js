@@ -4,6 +4,7 @@ const path = require("path");
 const hostname = "localhost";
 const port = 3000;
 
+const loginRouter = require("./routes/login");
 const charactersRouter = require("./routes/characters");
 const locationsRouter = require("./routes/locations");
 const itemsRouter = require("./routes/items");
@@ -15,7 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use(charactersRouter, locationsRouter, itemsRouter, cluesRouter);
+app.use(loginRouter, charactersRouter, locationsRouter, itemsRouter, cluesRouter);
 
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);

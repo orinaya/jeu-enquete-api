@@ -11,7 +11,7 @@
 ## Table des matières
 
 1. [Nouvelle quête disponible](#1-nouvelle-quête-disponible)
-2. [Installer le projet](#2-Installer-le-projet)
+2. [Installer le projet](#2-installer-le-projet)
 3. [Tester le projet](#3-tester-le-projet)
 4. [Conception du projet](#4-conception-du-projet)
 5. [Références](#5-références)
@@ -69,7 +69,7 @@ private.key
 npm install
 ```
 
-🔐 Générez une clé secrète
+🔐 Générez une clé secrète. Cette dernière apparaitra dans votre fichier `private.key`
 
 ```
 node genkey.js
@@ -81,13 +81,21 @@ node genkey.js
 npm run start
 ```
 
-## 4. Tester le projet
+## 3. Tester le projet
 
 ```
 curl localhost:3000
 ```
 
-## 5. Conception du projet
+Authentifiez-vous. Attention, seul le paladin est membre de la guilde, à vous de prouver qu'il s'agit bel et bien de vous.
+
+```
+curl -X POST http://localhost:3000/login \
+-H "Content-Type: application/json" \
+-d '{"name": "eldrin", "password": "Venenum1@"}'
+```
+
+## 4. Conception du projet
 
 ### Dictionnaires des données
 
@@ -99,7 +107,7 @@ curl localhost:3000
 
 ### Ressources
 
-## 6. Références
+## 5. Références
 
 1. [Cheat Sheet Markdown](https://www.markdownguide.org/cheat-sheet/)
 2. [Documentation Badges Markdown](https://shields.io/)
