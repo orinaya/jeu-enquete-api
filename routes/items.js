@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { items } = require("../database");
-const hal = require("../hal");
+const { items } = require("../utils/database");
+const hal = require("../utils/hal");
 
 router.get("/items", (req, res, next) => {
   res.status(200).json({

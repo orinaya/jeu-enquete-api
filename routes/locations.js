@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { locations } = require("../database");
-const hal = require("../hal");
+const { locations } = require("../utils/database");
+const hal = require("../utils/hal");
 
 router.get("/locations", (req, res, next) => {
   res.status(200).json({

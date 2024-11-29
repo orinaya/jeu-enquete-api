@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { characters } = require("../database");
-const hal = require("../hal");
+const { characters } = require("../utils/database");
+const hal = require("../utils/hal");
 
 router.get("/characters", (req, res, next) => {
   res.status(200).json({

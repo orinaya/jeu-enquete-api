@@ -1,9 +1,9 @@
 var express = require("express");
 var router = express.Router();
-var database = require("../database");
-var hal = require("../hal");
+var database = require("../utils/database");
+var hal = require("../utils/hal");
 var bcrypt = require("bcrypt");
-var jwt = require("../jwt");
+var jwt = require("../utils/jwt");
 
 /**
  * @param {} name
