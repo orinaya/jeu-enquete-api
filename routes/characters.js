@@ -1,23 +1,27 @@
 const express = require("express");
 const router = express.Router();
 const { characters } = require("../utils/database");
+const { checkTokenMiddleware } = require("../utils/jwt");
 const hal = require("../utils/hal");
 
-router.get("/characters", (req, res, next) => {
+router.get("/characters", checkTokenMiddleware, (req, res, next) => {
+  const publicCharacters = characters.map((character) => character.toPublic());
+
   res.status(200).json({
     links: {
       self: hal.halLinkObject("/characters"),
     },
-    _embedded: characters,
+    _embedded: publicCharacters,
   });
 });
 
-router.get("/characters/:id(\\d+)", (req, res, next) => {
+router.get("/characters/:id(\\d+)", checkTokenMiddleware, (req, res, next) => {
   const id = parseInt(req.params.id, 10);
-  const character = characters.find((character) => character.character_id === id);
+  const publicCharacters = characters.map((character) => character.toPublic());
+  const character = publicCharacters.find((character) => character.character_id === id);
 
   if (character === undefined) {
-    console.log("Le user n'a pas été trouvé");
+    console.log("Les personnes n'ont pas été trouvé");
     return res.status(404).json({});
   }
 

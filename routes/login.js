@@ -1,9 +1,9 @@
-var express = require("express");
-var router = express.Router();
-var database = require("../utils/database");
-var hal = require("../utils/hal");
-var bcrypt = require("bcrypt");
-var jwt = require("../utils/jwt");
+const express = require("express");
+const router = express.Router();
+const database = require("../utils/database");
+const hal = require("../utils/hal");
+const bcrypt = require("bcrypt");
+const jwt = require("../utils/jwt");
 
 /**
  * @param {} name
@@ -11,11 +11,11 @@ var jwt = require("../utils/jwt");
  * @returnsbcrypt
  */
 
-function authenticate(name, password) {
+// vérifier si l'utilisateur existe
+function isAuthentificated(name, password) {
   const user = database.users.find((user) => {
     return user.name === name && bcrypt.compareSync(password, user.password);
   });
-
   if (user === undefined) return false;
 
   return true;
@@ -40,7 +40,7 @@ function toFirstLetterUpperCase(nameTyped) {
 }
 
 //vérifier si le compagnon fait parti de la guilde
-function isCompanion(name) {
+function isAuthorized(name) {
   const user = findUserByName(name);
   return user && user.isAuthorized;
 }
@@ -51,32 +51,9 @@ router.post("/login", (req, res, next) => {
 
   console.log("Identifiants reçus :", req.body);
 
-  if (authenticate(name, password)) {
-    if (!isCompanion(name, password)) {
-      res
-        .status(401)
-        .send(`Vous n'êtes pas membre de la guilde ${toFirstLetterUpperCase(name)}, faites demi tour.`);
-      return;
-    }
+  const isAuthAsCompanion = isAuthentificated(name, password) && isAuthorized(name);
 
-    const accessToken = jwt.createJWT(name, true, "1 day");
-
-    let responseObject = {
-      _links: {
-        self: hal.halLinkObject("/login"),
-      },
-      jwt: accessToken,
-      message: `Bienvenue ${toFirstLetterUpperCase(name)} !`,
-    };
-
-    res.status(200).format({
-      "application/hal+json": function () {
-        res.send(responseObject);
-      },
-    });
-
-    console.log("Bienvenue", toFirstLetterUpperCase(name), "!");
-  } else {
+  if (!isAuthAsCompanion) {
     let responseObject = {
       _links: {
         self: hal.halLinkObject("/login"),
@@ -89,6 +66,27 @@ router.post("/login", (req, res, next) => {
       },
     });
   }
+
+  const accessToken = jwt.createJWT(name, true, "1 day");
+
+  let responseObject = {
+    _links: {
+      self: hal.halLinkObject("/login"),
+      characters: hal.halLinkObject("/characters"),
+      locations: hal.halLinkObject("/locations"),
+      items: hal.halLinkObject("/items"),
+      clues: hal.halLinkObject("/clues"),
+    },
+    jwt: accessToken,
+    message: `Bienvenue ${name} !`,
+  };
+
+  return res.status(200).format({
+    "application/hal+json": function () {
+      res.send(responseObject);
+      console.log("Bienvenue", name);
+    },
+  });
 });
 
 module.exports = router;

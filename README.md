@@ -111,3 +111,4 @@ curl -X POST http://localhost:3000/login \
 
 1. [Cheat Sheet Markdown](https://www.markdownguide.org/cheat-sheet/)
 2. [Documentation Badges Markdown](https://shields.io/)
+3. [Affecter par décomposition](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)

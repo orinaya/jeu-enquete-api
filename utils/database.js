@@ -35,7 +35,8 @@ class Character {
     character_ideals,
     character_personality_traits,
     character_flaws,
-    character_status
+    character_status,
+    isGuilty
   ) {
     this.character_id = character_id;
     this.character_name = character_name;
@@ -46,6 +47,12 @@ class Character {
     this.character_personality_traits = character_personality_traits;
     this.character_flaws = character_flaws;
     this.character_status = character_status;
+    this.isGuilty = isGuilty;
+  }
+
+  toPublic() {
+    const { isGuilty, ...publicData } = this;
+    return publicData;
   }
 }
 
@@ -91,7 +98,8 @@ const characters = [
     ["Crochetage", "Dissimulation", "Perception"],
     `Le monde est cruel, il faut être plus malin que lui pour survivre.`,
     ["Charmeur", "Rusé", "Calculateur"],
-    `Ne fait confiance à personne, toujours prêt à mentir pour se couvrir.`
+    `Ne fait confiance à personne, toujours prêt à mentir pour se couvrir.`,
+    false
   ),
   new Character(
     2,
@@ -102,7 +110,8 @@ const characters = [
     ["Analyse des artefacts", "Cryptographie", "Connaissance des arcanes"],
     `La connaissance est la clé de tout pouvoir.`,
     ["Curieuse", "Obstinée", "Analytique"],
-    `Obsédée par le savoir, parfois insensible aux autres.`
+    `Obsédée par le savoir, parfois insensible aux autres.`,
+    false
   ),
   new Character(
     3,
@@ -113,7 +122,8 @@ const characters = [
     ["Force brute", "Stratégie militaire", "Survie"],
     `L'honneur se gagne par les actes, pas par les mots.`,
     ["Loyal", "Impulsif", "Bourru"],
-    `Colérique, ne réfléchit pas toujours avant d'agir.`
+    `Colérique, ne réfléchit pas toujours avant d'agir.`,
+    false
   ),
   new Character(
     4,
@@ -124,7 +134,8 @@ const characters = [
     ["Soins", "Magie divine", "Persuasion"],
     `Le pardon est la voie vers la lumière.`,
     ["Calme", "Réfléchi", "Compatissant"],
-    `Trop confiant, parfois aveuglé par son besoin de rédemption.`
+    `Trop confiant, parfois aveuglé par son besoin de rédemption.`,
+    true
   ),
 ];
 
@@ -173,4 +184,15 @@ const clues = [
   new Clue(8, `Cristaux magiques`, `Indiquent une activité magique récente.`),
 ];
 
-module.exports = { Character, Location, Item, Clue, User, characters, locations, items, clues, users };
+module.exports = {
+  Character,
+  Location,
+  Item,
+  Clue,
+  User,
+  characters,
+  locations,
+  items,
+  clues,
+  users,
+};
