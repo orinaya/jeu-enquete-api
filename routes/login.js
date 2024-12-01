@@ -74,17 +74,15 @@ router.post("/login", (req, res, next) => {
       self: hal.halLinkObject("/login"),
       characters: hal.halLinkObject("/characters"),
       locations: hal.halLinkObject("/locations"),
-      items: hal.halLinkObject("/items"),
-      clues: hal.halLinkObject("/clues"),
     },
     jwt: accessToken,
-    message: `Bienvenue ${name} !`,
+    message: `Bienvenue ${toFirstLetterUpperCase(name)}, vous pouvez commencer votre enquête !`,
   };
 
   return res.status(200).format({
     "application/hal+json": function () {
       res.send(responseObject);
-      console.log("Bienvenue", name);
+      console.log("Bienvenue", toFirstLetterUpperCase(name), ", vous pouvez commencer votre enquête !");
     },
   });
 });

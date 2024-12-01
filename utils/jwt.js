@@ -1,7 +1,8 @@
 const fs = require("fs");
 const jsonwebtoken = require("jsonwebtoken");
 
-const SECRET = fs.readFileSync("private.key");
+// const SECRET = fs.readFileSync("private.key");
+const SECRET = fs.readFileSync("private.key", "utf8").trim();
 const EXPIRATION = "1 day";
 
 /**
@@ -36,7 +37,7 @@ const checkTokenMiddleware = (req, res, next) => {
       });
       return;
     }
-
+    console.log("Token valide :", decodedToken);
     res.locals.decodedToken = decodedToken;
     next();
   });
