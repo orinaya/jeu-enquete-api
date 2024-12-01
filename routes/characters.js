@@ -34,10 +34,10 @@ router.get("/characters/:id(\\d+)", checkTokenMiddleware, (req, res, next) => {
     character_race: character.character_race,
     character_class: character.character_class,
     character_background: character.character_background,
+    character_skills: character.character_skills,
     character_ideals: character.character_ideals,
-    character_personality_traits: character.character_personality_traits,
     character_flaws: character.character_flaws,
-    character_status: character.character_status,
+    character_personality: character.character_personality,
   });
 });
 

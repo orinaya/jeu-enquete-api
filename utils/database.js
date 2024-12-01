@@ -5,7 +5,10 @@ const Races = {
   DWARF: "Dwarf",
   ELF: "Elf",
   HUMAN: "Human",
-  HALF_ELF: "Half-elf",
+  HALF_ELF: "Half elf",
+  HIGH_ELF: "High Elf",
+  HALF_HIGH_ELF: "Half High Elf",
+  TIEFLING: "Tiefling",
 };
 
 const Classes = {
@@ -13,14 +16,18 @@ const Classes = {
   FIGHTER: "Fighter",
   WIZARD: "Wizard",
   ROGUE: "Rogue",
+  PALADIN: "Paladin",
+  BARBARIAN: "Barbarian",
 };
 
 // CLASS
 class User {
-  constructor(user_id, name, password = "", isAuthorized = false) {
+  constructor(user_id, name, password = "", user_race, user_class, isAuthorized = false) {
     this.user_id = user_id;
     this.name = name;
     this.password = bcrypt.hashSync(password, 5);
+    this.user_race = user_race;
+    this.user_class = user_class;
     this.isAuthorized = isAuthorized;
   }
 }
@@ -32,10 +39,10 @@ class Character {
     character_race,
     character_class,
     character_background,
+    character_skills,
     character_ideals,
-    character_personality_traits,
     character_flaws,
-    character_status,
+    character_personality,
     isGuilty
   ) {
     this.character_id = character_id;
@@ -43,10 +50,10 @@ class Character {
     this.character_race = character_race;
     this.character_class = character_class;
     this.character_background = character_background;
+    this.character_skills = character_skills;
     this.character_ideals = character_ideals;
-    this.character_personality_traits = character_personality_traits;
     this.character_flaws = character_flaws;
-    this.character_status = character_status;
+    this.character_personality = character_personality;
     this.isGuilty = isGuilty;
   }
 
@@ -62,30 +69,27 @@ class Location {
     this.location_name = location_name;
     this.location_description = location_description;
   }
-}
 
-class Item {
-  constructor(item_id, item_name, item_description) {
-    this.item_id = item_id;
-    this.item_name = item_name;
-    this.item_description = item_description;
+  addClues(cluesList) {
+    this.clues = cluesList.filter((clue) => clue.location_id === this.location_id);
   }
 }
 
 class Clue {
-  constructor(clue_id, clue_name, clue_description) {
+  constructor(clue_id, clue_name, clue_description, location_id = null) {
     this.clue_id = clue_id;
     this.clue_name = clue_name;
     this.clue_description = clue_description;
+    this.location_id = location_id;
   }
 }
 
 // DATAS
 const users = [
-  new User(1, "astarion", "Dolor1@", false),
-  new User(2, "eldrin", "Venenum1@", true),
-  new User(3, "karlach", "Ignis1@", false),
-  new User(4, "shadowheart", "Parabellum1@", false),
+  new User(1, "astarion", "Dolor1@", Races.HIGH_ELF, Classes.ROGUE, false),
+  new User(2, "eldrin", "Venenum1@", Races.HUMAN, Classes.PALADIN, true),
+  new User(3, "karlach", "Ignis1@", Races.TIEFLING, Classes.BARBARIAN, false),
+  new User(4, "shadowheart", "Parabellum1@", Races.HALF_HIGH_ELF, Classes.CLERIC, false),
 ];
 
 const characters = [
@@ -157,42 +161,31 @@ const locations = [
   ),
 ];
 
-const items = [
-  new Item(1, `Débris du piédestal`, `Restes de l'endroit où la Couronne était posée.`),
-  new Item(2, `Amulette en forme de dragon`, `Trouvée dans la main du gardien magique.`),
-  new Item(3, `Inscriptions en draconique`, `Gravées sur les murs, traduisibles par Lyanna.`),
-  new Item(4, `Vieux grimoire`, `Mentionne un rituel destructeur impliquant la Couronne.`),
-  new Item(5, `Morceaux de poudre d’argent`, `Témoins d’un rituel récent ou interrompu.`),
-  new Item(6, `Reliques mineures`, `Émettent une faible lumière magique.`),
-  new Item(7, `Dague rituelle`, `Gravée de symboles du culte sombre, encore ensanglantée.`),
-  new Item(8, `Parchemin d’invocation`, `Décrit un rituel impliquant la Couronne.`),
-  new Item(9, `Cristaux magiques`, `Dégagent une énergie résiduelle, manipulés récemment.`),
-];
-
 const clues = [
-  new Clue(1, `Empreinte de pas ensanglantée`, `Mène hors de la salle vers le sanctuaire.`),
-  new Clue(2, `Amulette en forme de dragon`, `Liée à une secte de culte draconique.`),
+  new Clue(1, `Débris du piédestal`, `Restes de l'endroit où la Couronne était posée.`, 1), //lié à personne juste montre la scène du "crime"
+  new Clue(2, `Amulette en forme de dragon`, `Liée à une secte de culte draconique.`, 1), // secte -> raphaël
+  new Clue(3, `Inscriptions en draconique`, `Gravées sur les murs, traduisibles par Lyanna.`, 1), // magie
+  new Clue(4, `Vieux grimoire`, `Mentionne un rituel destructeur impliquant la Couronne.`, 2), // magie
+  new Clue(5, `Morceaux de poudre d’argent`, `Témoins d’un rituel récent ou interrompu.`, 2), // magie
+  new Clue(6, `Reliques mineures`, `Émettent une faible lumière magique.`, 2), // magie
+  new Clue(7, `Dague rituelle`, `Gravée de symboles du culte sombre, encore ensanglantée.`, 3), // culte
+  new Clue(8, `Parchemin d’invocation`, `Décrit un rituel impliquant la Couronne et un sacrifice.`, 3), //
+  new Clue(9, `Cristaux magiques`, `Indiquent une activité magique récente.`, 3), //
   new Clue(
-    3,
+    10,
     `Note cryptée`,
-    `Évoque un "Maître" et un "temps opportun" pour utiliser la Couronne. Signée "R".`
-  ),
-  new Clue(4, `Réaction de Raphaël`, `Son malaise face aux artefacts émettant une lumière étrange.`),
-  new Clue(5, `Empreintes de pas`, `Correspondent à la taille des bottes de Darian.`),
-  new Clue(6, `Dague rituelle`, `Preuve matérielle d’un rituel lié au culte sombre.`),
-  new Clue(7, `Parchemin d’invocation`, `Décrit un rituel nécessitant la Couronne et un sacrifice.`),
-  new Clue(8, `Cristaux magiques`, `Indiquent une activité magique récente.`),
+    `Évoque un "Maître" et un "temps opportun" pour utiliser la Couronne. Signée "R".`,
+    2
+  ), // signé R
 ];
 
 module.exports = {
   Character,
   Location,
-  Item,
   Clue,
   User,
   characters,
   locations,
-  items,
   clues,
   users,
 };
