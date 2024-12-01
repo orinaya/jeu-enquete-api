@@ -13,7 +13,11 @@
 1. [Nouvelle quête disponible](#1-nouvelle-quête-disponible)
 2. [Installer le projet](#2-installer-le-projet)
 3. [Tester le projet](#3-tester-le-projet)
+   - [Authentifiez-vous](#authentifiez-vous)
+   - [Amusez-vous](#amusez-vous)
 4. [Conception du projet](#4-conception-du-projet)
+   - [Dictionnaire des données](#dictionnaires-des-données)
+   - [Ressources](#ressources)
 5. [Références](#5-références)
 
 ## 1. Nouvelle quête disponible
@@ -37,8 +41,6 @@
     \_/________________________________________/.
 ```
 
-<blockquote style="background-color: #D4CBC3; color: #222222; border-left: 5px solid #D49302; padding: 10px ; font-size: 1.2em; font-family: 'MedievalSharp';">
-
 🧙‍♂️ Vous et votre guilde vous dirigez vers le nord, à la recherche d'une relique mythique : la <b>Couronne d'Emeritus</b>. Mais alors que vous approchez de votre destination, une lettre mystérieuse vous parvient, vous mettant en garde : l'un de vos compagnons est sur le point de vous trahir.
 
 Dans cette quête, personne ne peut être réellement fiable. Le destin de ce monde repose sur vos épaules. Saurez-vous percer les mystères et découvrir la vérité avant qu'il ne soit trop tard ?
@@ -46,8 +48,6 @@ Dans cette quête, personne ne peut être réellement fiable. Le destin de ce mo
 Si vous êtes prêt à relever ce défi, suivez les étapes ci-dessous pour lancer et tester le projet.
 
 **L'enquête vous attend, aventurier !** 🕵️‍♂️
-
-</blockquote>
 
 ## 2. Installer le projet
 
@@ -83,32 +83,94 @@ npm run start
 
 ## 3. Tester le projet
 
+⬇️ Rendez-vous ici, pour découvrir la quête qui vous attend ⬇️
+
 ```
 curl localhost:3000
 ```
 
-Authentifiez-vous. Attention, seul le paladin est membre de la guilde, à vous de prouver qu'il s'agit bel et bien de vous.
+### Authentifiez-vous
+
+Les utilisateurs :
+
+| id  | name        | password     | race          | class     | isAuthorized |
+| --- | ----------- | ------------ | ------------- | --------- | ------------ |
+| 1   | astarion    | Dolor1@      | High Elf      | Rogue     | false        |
+| 2   | eldrin      | Venenum1@    | Human         | Paladin   | true         |
+| 3   | karlach     | Ignis1@      | Tiefling      | Barbarian | false        |
+| 4   | shadowheart | Parabellum1@ | Half High Elf | Cleric    | false        |
+
+⚠️ Attention, seul le paladin est membre de la guilde, à vous de prouver qu'il s'agit bel et bien de vous. ⚠️
 
 ```
-curl -X POST http://localhost:3000/login \
--H "Content-Type: application/json" \
--d '{"name": "eldrin", "password": "Venenum1@"}'
+curl -X POST -d "name={name}&password={password}" localhost:3000/login
 ```
+
+<blockquote>N'oubliez pas de garder votre token JWT sous la main, vos compagnons pourraient croire que vous avez utiliser un sort de déguisement. 😉</blockquote>
+
+### Amusez-vous
+
+Désormais, vous êtes libres de parcourir les lieux et découvrir les indices cachés. Vous trouverez touts les ressources ici : ➡️ [Ressources](#ressources) ⬅️
+
+Exemple :
+
+```
+curl -X GET http://localhost:3000/characters -H "Authorization: Bearer $token"
+```
+
+<blockquote>💡TIPS : Commencez par regarder vos compagnons de voyage, les connaître mieux vous aidera à mieux interpréter les indices.</blockquote>
+
+### Accuser
+
+Lorsque vous êtes prêt, accuser la personne
 
 ## 4. Conception du projet
 
 ### Dictionnaires des données
 
-### MCD
-
-### MPD
-
-### MLD
+| Code                  | Libellé                              | Type | Obligatoire ? | Remarques / Contraintes                       |
+| --------------------- | ------------------------------------ | ---- | ------------- | --------------------------------------------- |
+| user_id               | Id de l'utilisateur                  | N    | Oui           | UNIQUE                                        |
+| name                  | Nom de l'utilisateur                 | AN   | Oui           | Sert à s'identifier                           |
+| password              | Mot de passe de l'utilisateur        | AN   | Oui           | Mot de passe hashé avec bcrypt                |
+| user_race             | Race du personnage                   | A    | Oui           | Enum (Elf, half-elf, human, dwarf, etc...)    |
+| user_class            | Classe du personnage                 | A    | Oui           | Enum (Rogue, Fighter, Cleric, Wizard, etc...) |
+| isAuthorized          | Utilisateur membre de la guilde ?    | B    | Oui           | Booléen                                       |
+| character_id          | Id du personnage                     | N    | Oui           | UNIQUE                                        |
+| character_name        | Nom du personnage                    | A    | Oui           |                                               |
+| character_race        | Race du personnage                   | A    | Oui           | Enum (Elf, half-elf, human, dwarf)            |
+| character_class       | Classe du personnage                 | A    | Oui           | Enum (Rogue, Fighter, Cleric, Wizard)         |
+| character_background  | Histoire du personnage               | AN   | Oui           |                                               |
+| character_skills      | Compétences du personnage            | A    | Oui           | Plusieurs compétences possibles               |
+| character_ideals      | Idéaux du personnage                 | AN   | Oui           |                                               |
+| character_flaws       | Défauts du personnage                | AN   | Oui           | Plusieurs défauts possibles                   |
+| character_personality | Traits de personnalité du personnage | AN   | Oui           |                                               |
+| isGuilty              | Est-il le coupable ?                 | B    | Oui           | Booléen                                       |
+| location_id           | Id du lieu                           | N    | Oui           | UNIQUE, utilisé pour situer un indice         |
+| location_name         | Nom du lieu                          | AN   | Oui           |                                               |
+| location_description  | Description du lieu                  | AN   | Oui           |                                               |
+| clue_id               | Id de l'indice                       | N    | Oui           | UNIQUE                                        |
+| clue_name             | Nom de l'indice                      | AN   | Oui           |                                               |
+| clue_description      | Description de l'indice              | AN   | Oui           |                                               |
 
 ### Ressources
+
+| Ressources                                             | URL                     | Méthodes HTTP   | Paramètres d'URL  | Commentaires          | Headers HTTP                     |
+| ------------------------------------------------------ | ----------------------- | --------------- | ----------------- | --------------------- | -------------------------------- |
+| Introduction de la quête                               | `/`                     | `GET`           |                   |                       | `Content-Type: application/json` |
+| Authentification de l'utilisateur                      | `/login`                | `POST`          | `name`,`password` | Retourne un token JWT | `Content-Type: application/json` |
+| Affichage de la liste des personnages                  | `/characters`           | `GET`, `DELETE` |                   |                       | `Authorization: Bearer $token`   |
+| Affichage d'un personnage spécifique                   | `/characters/{id}`      | `GET`           |                   |                       | `Authorization: Bearer $token`   |
+| Affichage de la liste des lieux                        | `/locations`            | `GET`           |                   |                       | `Authorization: Bearer $token`   |
+| Affichage d'un lieu spécifique                         | `/locations/{id}`       | `GET`           |                   |                       | `Authorization: Bearer $token`   |
+| Affichage de la liste des indices d'un lieu spécifique | `/locations/{id}/clues` | `GET`           |                   |                       | `Authorization: Bearer $token`   |
 
 ## 5. Références
 
 1. [Cheat Sheet Markdown](https://www.markdownguide.org/cheat-sheet/)
 2. [Documentation Badges Markdown](https://shields.io/)
-3. [Affecter par décomposition](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)
+3. [MDN Web Docs - API Express, Node.js, Javascript](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs)
+4. [JWT](https://jwt.io/)
+5. [Specification HAL](https://stateless.group/hal_specification.html)
+6. [ExpressJS](https://expressjs.com/fr/)
+7. Dépôt GitHub [@paul-schuhm](https://github.com/paul-schuhm) - https://github.com/paul-schuhm/web-api
