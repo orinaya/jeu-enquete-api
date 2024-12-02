@@ -1,0 +1,14 @@
+Petite solution rapide:
+
+C'est bien Raphaël le coupable.
+
+Quand on regarde sa fiche personnage :
+- Il maitrise la magie
+- Il a failli à protéger une relique sacrée et cette fois il désire la relique pour lui.
+Son culte est en réalité mauvais et cherche la mort et le pouvoir. son passé le hante, et il est motivé par des actions liées à la relique volée.
+Il est aveuglé par son besoin de rédemption, au point d'utiliser la relique.
+
+On peut donc vérifier ça avec les indices :
+- Objets liés à un culte
+- Traces de magie
+- Lettre déchirée signée "-R"
