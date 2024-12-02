@@ -10,23 +10,32 @@
 
 ## Table des matières
 
-1. [Nouvelle quête disponible](#1-nouvelle-quête-disponible)
-2. [Installer le projet](#2-installer-le-projet)
-3. [Tester le projet](#3-tester-le-projet)
+1. [Stack technique](#1-stack-technique)
+2. [Nouvelle quête disponible](#2-nouvelle-quête-disponible)
+3. [Installer le projet](#3-installer-le-projet)
+4. [Tester le projet](#4-tester-le-projet)
    - [Authentifiez-vous](#authentifiez-vous)
    - [Amusez-vous](#amusez-vous)
    - [Accuser](#accuser)
-4. [Conception du projet](#4-conception-du-projet)
+5. [Conception du projet](#5-conception-du-projet)
    - [Dictionnaire des données](#dictionnaires-des-données)
    - [Ressources](#ressources)
-5. [Sécurité](#5-sécurité)
+6. [Sécurité](#6-sécurité)
    - [JSON Web Token](#json-web-token)
    - [Middleware](#middleware)
    - [Hashage du mot de passe](#hashage-du-mot-de-passe)
-6. [Remarques](#6-remarques)
-7. [Références](#7-références)
+7. [Remarques](#7-remarques)
+8. [Références](#8-références)
 
-## 1. Nouvelle quête disponible
+## 1. Stack technique
+
+| Catégorie                   | Technologie                                                                                                                                                                                                                                                                                                                                 |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Langages & Frameworks       | ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black) ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white) ![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white) |
+| Authentification & Sécurité | ![Bcrypt](https://img.shields.io/badge/Bcrypt-4488C6?style=for-the-badge&logo=lock&logoColor=white) ![jsonwebtoken](https://img.shields.io/badge/JSONWebToken-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)                                                                                                                |
+| Outils                      | ![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)                                                                                                                                                                                                                                                |
+
+## 2. Nouvelle quête disponible
 
 ```
    __________________________________________
@@ -55,7 +64,7 @@ Si vous êtes prêt à relever ce défi, suivez les étapes ci-dessous pour lanc
 
 **L'enquête vous attend, aventurier !** 🕵️‍♂️
 
-## 2. Installer le projet
+## 3. Installer le projet
 
 📂 Clôner le dépôt
 
@@ -87,7 +96,7 @@ node utils/genkey.js
 npm run start
 ```
 
-## 3. Tester le projet
+## 4. Tester le projet
 
 ⬇️ Rendez-vous ici, pour découvrir la quête qui vous attend ⬇️
 
@@ -149,7 +158,7 @@ curl -X DELETE -H "Authorization: Bearer $token" localhost:3000/characters/{id}
 
 ⚠️ Attention, éliminer une personne est un acte grave, vos actes auront des conséquences si vous vous trompez ⚠️
 
-## 4. Conception du projet
+## 5. Conception du projet
 
 ### Dictionnaires des données
 
@@ -193,7 +202,7 @@ curl -X DELETE -H "Authorization: Bearer $token" localhost:3000/characters/{id}
 | Affichage de la liste des indices d'un lieu spécifique | `/locations/{id}/clues` | `GET`           |                   |                                                     | `Authorization: Bearer $token`   |
 | Accuser un personnage                                  | `/accuse`               | `POST`          | `name`            |                                                     | `Authorization: Bearer $token`   |
 
-## 5. Sécurité
+## 6. Sécurité
 
 ### JSON Web Token
 
@@ -210,14 +219,14 @@ Il bloque l'accès en cas de jeton invalide ou expiré.
 
 Les mots de passe sont hashés grâce à **bcrypt**.
 
-## 6. Remarques
+## 7. Remarques
 
 J'ai trouvé le projet à la fois intéressant et efficace pour explorer le monde des APIs. Il m'a permis de mieux appréhender le processus et la manipulation de donnée, tout en explorant des concepts comme l’authentification, les middlewares et les tokens, de manière ludique.
 Ce projet m'a également permis de partager ma passion pour la fantaisie à travers ses lieux et ses personnages.
 En termes de défis, le plus complexe a été de trouver une solution pour la méthode `DELETE`. Cependant, j'ai réussi à trouver une solution avec une explication logique.
 Dans le futur, j'aimerais faire évoluer ce jeu en ajoutant pourquoi pas des personnages ou en créant d'autres quêtes.
 
-## 7. Références
+## 8. Références
 
 1. [Cheat Sheet Markdown](https://www.markdownguide.org/cheat-sheet/)
 2. [Documentation Badges Markdown](https://shields.io/)
