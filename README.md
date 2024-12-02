@@ -15,10 +15,16 @@
 3. [Tester le projet](#3-tester-le-projet)
    - [Authentifiez-vous](#authentifiez-vous)
    - [Amusez-vous](#amusez-vous)
+   - [Accuser](#accuser)
 4. [Conception du projet](#4-conception-du-projet)
    - [Dictionnaire des données](#dictionnaires-des-données)
    - [Ressources](#ressources)
-5. [Références](#5-références)
+5. [Sécurité](#5-sécurité)
+   - [JSON Web Token](#json-web-token)
+   - [Middleware](#middleware)
+   - [Hashage du mot de passe](#hashage-du-mot-de-passe)
+6. [Remarques](#6-remarques)
+7. [Références](#7-références)
 
 ## 1. Nouvelle quête disponible
 
@@ -106,7 +112,11 @@ Les utilisateurs :
 curl -X POST -d "name={name}&password={password}" localhost:3000/login
 ```
 
-<blockquote>N'oubliez pas de garder votre token JWT sous la main, vos compagnons pourraient croire que vous avez utiliser un sort de déguisement. 😉</blockquote>
+N'oubliez pas de garder votre token JWT sous la main, vos compagnons pourraient croire que vous avez utiliser un sort de déguisement. 😉
+
+```
+token=jwt-reçu
+```
 
 ### Amusez-vous
 
@@ -143,45 +153,71 @@ curl -X DELETE -H "Authorization: Bearer $token" localhost:3000/characters/{id}
 
 ### Dictionnaires des données
 
-| Code                  | Libellé                              | Type | Obligatoire ? | Remarques / Contraintes                       |
-| --------------------- | ------------------------------------ | ---- | ------------- | --------------------------------------------- |
-| user_id               | Id de l'utilisateur                  | N    | Oui           | UNIQUE                                        |
-| name                  | Nom de l'utilisateur                 | AN   | Oui           | Sert à s'identifier                           |
-| password              | Mot de passe de l'utilisateur        | AN   | Oui           | Mot de passe hashé avec bcrypt                |
-| user_race             | Race du personnage                   | A    | Oui           | Enum (Elf, half-elf, human, dwarf, etc...)    |
-| user_class            | Classe du personnage                 | A    | Oui           | Enum (Rogue, Fighter, Cleric, Wizard, etc...) |
-| isAuthorized          | Utilisateur membre de la guilde ?    | B    | Oui           | Booléen                                       |
-| character_id          | Id du personnage                     | N    | Oui           | UNIQUE                                        |
-| character_name        | Nom du personnage                    | A    | Oui           |                                               |
-| character_race        | Race du personnage                   | A    | Oui           | Enum (Elf, half-elf, human, dwarf)            |
-| character_class       | Classe du personnage                 | A    | Oui           | Enum (Rogue, Fighter, Cleric, Wizard)         |
-| character_background  | Histoire du personnage               | AN   | Oui           |                                               |
-| character_skills      | Compétences du personnage            | A    | Oui           | Plusieurs compétences possibles               |
-| character_ideals      | Idéaux du personnage                 | AN   | Oui           |                                               |
-| character_flaws       | Défauts du personnage                | AN   | Oui           | Plusieurs défauts possibles                   |
-| character_personality | Traits de personnalité du personnage | AN   | Oui           |                                               |
-| isGuilty              | Est-il le coupable ?                 | B    | Oui           | Booléen                                       |
-| location_id           | Id du lieu                           | N    | Oui           | UNIQUE, utilisé pour situer un indice         |
-| location_name         | Nom du lieu                          | AN   | Oui           |                                               |
-| location_description  | Description du lieu                  | AN   | Oui           |                                               |
-| clue_id               | Id de l'indice                       | N    | Oui           | UNIQUE                                        |
-| clue_name             | Nom de l'indice                      | AN   | Oui           |                                               |
-| clue_description      | Description de l'indice              | AN   | Oui           |                                               |
+| Code                  | Libellé                              | Type | Obligatoire ? | Remarques / Contraintes                           |
+| --------------------- | ------------------------------------ | ---- | ------------- | ------------------------------------------------- |
+| **user_id**           | Id de l'utilisateur                  | N    | Oui           | Identifiant UNIQUE                                |
+| name                  | Nom de l'utilisateur                 | AN   | Oui           | Sert à s'identifier                               |
+| password              | Mot de passe de l'utilisateur        | AN   | Oui           | Mot de passe hashé avec bcrypt                    |
+| user_race             | Race du personnage                   | A    | Oui           | Enum (Elf, half-elf, human, dwarf, etc...)        |
+| user_class            | Classe du personnage                 | A    | Oui           | Enum (Rogue, Fighter, Cleric, Wizard, etc...)     |
+| isAuthorized          | Utilisateur membre de la guilde ?    | B    | Oui           | True ou false : compagnon ou non ?                |
+| **character_id**      | Id du personnage                     | N    | Oui           | Identifiant UNIQUE                                |
+| character_name        | Nom du personnage                    | A    | Oui           |                                                   |
+| character_race        | Race du personnage                   | A    | Oui           | Enum (Elf, half-elf, human, dwarf)                |
+| character_class       | Classe du personnage                 | A    | Oui           | Enum (Rogue, Fighter, Cleric, Wizard)             |
+| character_background  | Histoire du personnage               | AN   | Oui           |                                                   |
+| character_skills      | Compétences du personnage            | A    | Oui           | Plusieurs compétences possibles                   |
+| character_ideals      | Idéaux du personnage                 | AN   | Oui           |                                                   |
+| character_flaws       | Défauts du personnage                | AN   | Oui           | Plusieurs défauts possibles                       |
+| character_personality | Traits de personnalité du personnage | AN   | Oui           |                                                   |
+| isGuilty              | Est-il le coupable ?                 | B    | Oui           | True ou false : coupable ou non ?                 |
+| **location_id**       | Id du lieu                           | N    | Oui           | Identifiant UNIQUE, utilisé pour situer un indice |
+| location_name         | Nom du lieu                          | AN   | Oui           |                                                   |
+| location_description  | Description du lieu                  | AN   | Oui           |                                                   |
+| **clue_id**           | Id de l'indice                       | N    | Oui           | Identifiant UNIQUE                                |
+| clue_name             | Nom de l'indice                      | AN   | Oui           |                                                   |
+| clue_description      | Description de l'indice              | AN   | Oui           |                                                   |
+
+<blockquote> Légende: A: Alphabétique ; N : Numérique ; AN: Alpha-Numérique ; B : Booléen </blockquote>
 
 ### Ressources
 
-| Ressources                                             | URL                     | Méthodes HTTP   | Paramètres d'URL  | Commentaires          | Headers HTTP                     |
-| ------------------------------------------------------ | ----------------------- | --------------- | ----------------- | --------------------- | -------------------------------- |
-| Introduction de la quête                               | `/`                     | `GET`           |                   |                       | `Content-Type: application/json` |
-| Authentification de l'utilisateur                      | `/login`                | `POST`          | `name`,`password` | Retourne un token JWT | `Content-Type: application/json` |
-| Affichage de la liste des personnages                  | `/characters`           | `GET`           |                   |                       | `Authorization: Bearer $token`   |
-| Affichage d'un personnage spécifique                   | `/characters/{id}`      | `GET`, `DELETE` |                   |                       | `Authorization: Bearer $token`   |
-| Affichage de la liste des lieux                        | `/locations`            | `GET`           |                   |                       | `Authorization: Bearer $token`   |
-| Affichage d'un lieu spécifique                         | `/locations/{id}`       | `GET`           |                   |                       | `Authorization: Bearer $token`   |
-| Affichage de la liste des indices d'un lieu spécifique | `/locations/{id}/clues` | `GET`           |                   |                       | `Authorization: Bearer $token`   |
-| Accuser un personnage                                  | `/accuse`               | `POST`          | `name`            |                       | `Authorization: Bearer $token`   |
+| Ressources                                             | URL                     | Méthodes HTTP   | Paramètres d'URL  | Commentaires                                        | Headers HTTP                     |
+| ------------------------------------------------------ | ----------------------- | --------------- | ----------------- | --------------------------------------------------- | -------------------------------- |
+| Introduction de la quête                               | `/`                     | `GET`           |                   | Explique l'enquête                                  | `Content-Type: application/json` |
+| Authentification de l'utilisateur                      | `/login`                | `POST`          | `name`,`password` | Authentifie (isAuthorized) et retourne un token JWT | `Content-Type: application/json` |
+| Affichage de la liste des personnages                  | `/characters`           | `GET`           |                   |                                                     | `Authorization: Bearer $token`   |
+| Affichage d'un personnage spécifique                   | `/characters/{id}`      | `GET`, `DELETE` |                   |                                                     | `Authorization: Bearer $token`   |
+| Affichage de la liste des lieux                        | `/locations`            | `GET`           |                   |                                                     | `Authorization: Bearer $token`   |
+| Affichage d'un lieu spécifique                         | `/locations/{id}`       | `GET`           |                   |                                                     | `Authorization: Bearer $token`   |
+| Affichage de la liste des indices d'un lieu spécifique | `/locations/{id}/clues` | `GET`           |                   |                                                     | `Authorization: Bearer $token`   |
+| Accuser un personnage                                  | `/accuse`               | `POST`          | `name`            |                                                     | `Authorization: Bearer $token`   |
 
-## 5. Références
+## 5. Sécurité
+
+### JSON Web Token
+
+Les utilisateurs obtiennent un jeton JWT lors de l'authentification.
+Ce jeton doit être validé par le middleware `checkTokenMiddleware` pour accéder aux routes protégées.
+Ainsi, les données sensibles ne sont pas exposés aux utilisateurs non autorisés (`isAuthorized`).
+
+### Middleware
+
+Le middleware `checkTokenMiddleware` vérifie le JWT dans l'en-tête de la requête.
+Il bloque l'accès en cas de jeton invalide ou expiré.
+
+### Hashage du mot de passe
+
+Les mots de passe sont hashés grâce à **bcrypt**.
+
+## 6. Remarques
+
+J'ai trouvé le projet à la fois intéressant et efficace pour explorer le monde des APIs. Il m'a permis de mieux appréhender le processus et la manipulation de donnée, tout en explorant des concepts comme l’authentification, les middlewares et les tokens, de manière ludique.
+Ce projet m'a également permis de partager ma passion pour la fantaisie à travers ses lieux et ses personnages.
+En termes de défis, le plus complexe a été de trouver une solution pour la méthode `DELETE`. Cependant, j'ai réussi à trouver une solution avec une explication logique.
+Dans le futur, j'aimerais faire évoluer ce jeu en ajoutant pourquoi pas des personnages ou en créant d'autres quêtes.
+
+## 7. Références
 
 1. [Cheat Sheet Markdown](https://www.markdownguide.org/cheat-sheet/)
 2. [Documentation Badges Markdown](https://shields.io/)

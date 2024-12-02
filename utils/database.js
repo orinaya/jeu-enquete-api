@@ -58,7 +58,7 @@ class Character {
   }
 
   toPublic() {
-    const {isGuilty, ...publicData} = this;
+    const { isGuilty, ...publicData } = this;
     return publicData;
   }
 }
@@ -164,17 +164,12 @@ const locations = [
 const clues = [
   new Clue(1, `Débris du piédestal`, `Restes de l'endroit où la Couronne était posée.`, 1), //lié à personne juste montre la scène du "crime"
   new Clue(2, `Amulette en forme de dragon`, `Liée à une secte de culte draconique.`, 1), // secte -> raphaël
-  new Clue(3, `Inscriptions en draconique`, `Gravées sur les murs, traduisibles par Lyanna.`, 1), // magie
+  new Clue(3, `Inscriptions en draconique`, `Gravées sur les murs, traduisibles par Tav.`, 1), // magie
   new Clue(4, `Vieux grimoire`, `Mentionne un rituel destructeur impliquant la Couronne.`, 2), // magie
   new Clue(5, `Morceaux de poudre d’argent`, `Témoins d’un rituel récent ou interrompu.`, 2), // magie
   new Clue(6, `Reliques mineures`, `Émettent une faible lumière magique.`, 2), // magie
   new Clue(7, `Dague rituelle`, `Gravée de symboles du culte sombre, encore ensanglantée.`, 3), // culte
-  new Clue(
-    8,
-    `Parchemin d’invocation`,
-    `Décrit un rituel impliquant la Couronne et un sacrifice.`,
-    3
-  ), //
+  new Clue(8, `Parchemin d’invocation`, `Décrit un rituel impliquant la Couronne et un sacrifice.`, 3), //
   new Clue(9, `Cristaux magiques`, `Indiquent une activité magique récente.`, 3), //
   new Clue(
     10,
