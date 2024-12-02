@@ -4,7 +4,7 @@
 
 ![Thème](https://img.shields.io/badge/Th%C3%A8me-Fantaisie-B3DEDD?style=for-the-badge)
 ![Type](https://img.shields.io/badge/Type-Enqu%C3%AAte-DEB3B3?style=for-the-badge)
-![Durée](https://img.shields.io/badge/Dur%C3%A9e-15%20min-DECB42?style=for-the-badge)
+![Durée](https://img.shields.io/badge/Dur%C3%A9e-10%20min-DECB42?style=for-the-badge)
 
 ⚔️ Plongez dans une aventure immersive en explorant les APIs avec ce **jeu d'enquête médiéval-fantastique**, où vous incarnerez <mark style="background-color: #B3DEDD;color: #1F4746 ;padding: 1px 3px; border-radius: 3px">**Eldrin Le Protecteur**</mark>, paladin noble et vénérable.
 
@@ -72,7 +72,7 @@ npm install
 🔐 Générez une clé secrète. Cette dernière apparaitra dans votre fichier `private.key`
 
 ```
-node genkey.js
+node utils/genkey.js
 ```
 
 ▶️ Lancez le projet
@@ -110,7 +110,7 @@ curl -X POST -d "name={name}&password={password}" localhost:3000/login
 
 ### Amusez-vous
 
-Désormais, vous êtes libres de parcourir les lieux et découvrir les indices cachés. Vous trouverez touts les ressources ici : ➡️ [Ressources](#ressources) ⬅️
+Désormais, vous êtes libres de parcourir les lieux et découvrir les indices cachés. Vous trouverez toutes les ressources ici : ➡️ [Ressources](#ressources) ⬅️
 
 Exemple :
 
@@ -122,7 +122,22 @@ curl -X GET http://localhost:3000/characters -H "Authorization: Bearer $token"
 
 ### Accuser
 
-Lorsque vous êtes prêt, accuser la personne
+Lorsque vous êtes prêt à accuser un compagnon :
+
+```
+curl -X POST \
+-d "name={name}" \
+-H "Authorization: Bearer $token" \
+localhost:3000/accuse
+```
+
+Si vous trouvez le coupable, vous allez devoir l'éliminer avant qu'il ne vous trahisse et détruise le monde :
+
+```
+curl -X DELETE -H "Authorization: Bearer $token" localhost:3000/characters/{id}
+```
+
+⚠️ Attention, éliminer une personne est un acte grave, vos actes auront des conséquences si vous vous trompez ⚠️
 
 ## 4. Conception du projet
 
@@ -159,11 +174,12 @@ Lorsque vous êtes prêt, accuser la personne
 | ------------------------------------------------------ | ----------------------- | --------------- | ----------------- | --------------------- | -------------------------------- |
 | Introduction de la quête                               | `/`                     | `GET`           |                   |                       | `Content-Type: application/json` |
 | Authentification de l'utilisateur                      | `/login`                | `POST`          | `name`,`password` | Retourne un token JWT | `Content-Type: application/json` |
-| Affichage de la liste des personnages                  | `/characters`           | `GET`, `DELETE` |                   |                       | `Authorization: Bearer $token`   |
-| Affichage d'un personnage spécifique                   | `/characters/{id}`      | `GET`           |                   |                       | `Authorization: Bearer $token`   |
+| Affichage de la liste des personnages                  | `/characters`           | `GET`           |                   |                       | `Authorization: Bearer $token`   |
+| Affichage d'un personnage spécifique                   | `/characters/{id}`      | `GET`, `DELETE` |                   |                       | `Authorization: Bearer $token`   |
 | Affichage de la liste des lieux                        | `/locations`            | `GET`           |                   |                       | `Authorization: Bearer $token`   |
 | Affichage d'un lieu spécifique                         | `/locations/{id}`       | `GET`           |                   |                       | `Authorization: Bearer $token`   |
 | Affichage de la liste des indices d'un lieu spécifique | `/locations/{id}/clues` | `GET`           |                   |                       | `Authorization: Bearer $token`   |
+| Accuser un personnage                                  | `/accuse`               | `POST`          | `name`            |                       | `Authorization: Bearer $token`   |
 
 ## 5. Références
 

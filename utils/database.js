@@ -58,7 +58,7 @@ class Character {
   }
 
   toPublic() {
-    const { isGuilty, ...publicData } = this;
+    const {isGuilty, ...publicData} = this;
     return publicData;
   }
 }
@@ -131,7 +131,7 @@ const characters = [
   ),
   new Character(
     4,
-    "Raphaël",
+    "Raphael",
     Races.ELF,
     Classes.CLERIC,
     `Prêtre d'un culte bienveillant, il a autrefois failli à protéger une relique sacrée, et il considère cette mission comme une opportunité de rédemption.`,
@@ -169,7 +169,12 @@ const clues = [
   new Clue(5, `Morceaux de poudre d’argent`, `Témoins d’un rituel récent ou interrompu.`, 2), // magie
   new Clue(6, `Reliques mineures`, `Émettent une faible lumière magique.`, 2), // magie
   new Clue(7, `Dague rituelle`, `Gravée de symboles du culte sombre, encore ensanglantée.`, 3), // culte
-  new Clue(8, `Parchemin d’invocation`, `Décrit un rituel impliquant la Couronne et un sacrifice.`, 3), //
+  new Clue(
+    8,
+    `Parchemin d’invocation`,
+    `Décrit un rituel impliquant la Couronne et un sacrifice.`,
+    3
+  ), //
   new Clue(9, `Cristaux magiques`, `Indiquent une activité magique récente.`, 3), //
   new Clue(
     10,
