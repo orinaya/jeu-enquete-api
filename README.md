@@ -24,6 +24,7 @@
    - [JSON Web Token](#json-web-token)
    - [Middleware](#middleware)
    - [Hashage du mot de passe](#hashage-du-mot-de-passe)
+   - [Code Statut](#code-statut)
 7. [Remarques](#7-remarques)
 8. [Références](#8-références)
 
@@ -218,6 +219,10 @@ Il bloque l'accès en cas de jeton invalide ou expiré.
 ### Hashage du mot de passe
 
 Les mots de passe sont hashés grâce à **bcrypt**.
+
+### Code statut
+
+Une enum a été ajoutée pour centraliser les messages des codes statuts. Ils permettent de comprendre l'erreur rencontrés par l'utilisateur.
 
 ## 7. Remarques
 
