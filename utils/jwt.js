@@ -4,6 +4,7 @@ const jsonwebtoken = require("jsonwebtoken");
 // const SECRET = fs.readFileSync("private.key");
 const SECRET = fs.readFileSync("private.key", "utf8").trim();
 const EXPIRATION = "1 day";
+const { ErrorMessages } = require("../utils/enum");
 
 /**
  * @param {*} headervalue
@@ -27,13 +28,15 @@ const extractBearerToken = (headervalue) => {
 const checkTokenMiddleware = (req, res, next) => {
   const token = req.headers.authorization && extractBearerToken(req.headers.authorization);
   if (!token) {
-    return res.status(401).json({ msg: "Vous n'êtes pas autorisé-e à accéder à cette ressource." });
+    return res.status(401).json({
+      message: ErrorMessages[401]("cet utilisateur"),
+    });
   }
 
   jsonwebtoken.verify(token, SECRET, (err, decodedToken) => {
     if (err) {
       res.status(401).json({
-        msg: "Vous n'êtes pas autorisé-e à accéder à cette ressource.",
+        message: ErrorMessages[401]("cet utilisateur"),
       });
       return;
     }

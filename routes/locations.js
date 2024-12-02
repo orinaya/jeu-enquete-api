@@ -3,6 +3,7 @@ const router = express.Router();
 const { locations, clues } = require("../utils/database");
 const { checkTokenMiddleware } = require("../utils/jwt");
 const hal = require("../utils/hal");
+const { ErrorMessages } = require("../utils/enum");
 
 router.get("/locations", checkTokenMiddleware, (req, res, next) => {
   res.status(200).json({
@@ -21,9 +22,11 @@ router.get("/locations/:id(\\d+)", checkTokenMiddleware, (req, res, next) => {
     location.addClues(clues);
   });
 
+  // Lieu non trouvé
   if (location === undefined) {
-    console.log("Le lieu n'a pas été trouvé");
-    return res.status(404).json({});
+    return res.status(404).json({
+      message: ErrorMessages[404]("lieu"),
+    });
   }
 
   res.status(200).json({
@@ -32,7 +35,7 @@ router.get("/locations/:id(\\d+)", checkTokenMiddleware, (req, res, next) => {
       locations: hal.halLinkObject(`/locations`),
     },
     location_name: location.location_name,
-    location_race: location.location_description,
+    location_description: location.location_description,
     clues: location.clues,
   });
 });
@@ -41,9 +44,12 @@ router.get("/locations/:id(\\d+)/clues", checkTokenMiddleware, (req, res, next) 
   const id = parseInt(req.params.id, 10);
   const location = locations.find((location) => location.location_id === id);
 
+  // Lieu non trouvé
   if (location === undefined) {
     console.log("Le lieu n'a pas été trouvé");
-    return res.status(404).json({});
+    return res.status(404).json({
+      message: ErrorMessages[404]("lieu"),
+    });
   }
 
   const cluesLocation = clues.filter((clue) => clue.location_id === id);

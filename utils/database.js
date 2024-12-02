@@ -1,24 +1,5 @@
-var bcrypt = require("bcrypt");
-
-// ENUM
-const Races = {
-  DWARF: "Dwarf",
-  ELF: "Elf",
-  HUMAN: "Human",
-  HALF_ELF: "Half elf",
-  HIGH_ELF: "High Elf",
-  HALF_HIGH_ELF: "Half High Elf",
-  TIEFLING: "Tiefling",
-};
-
-const Classes = {
-  CLERIC: "Cleric",
-  FIGHTER: "Fighter",
-  WIZARD: "Wizard",
-  ROGUE: "Rogue",
-  PALADIN: "Paladin",
-  BARBARIAN: "Barbarian",
-};
+const bcrypt = require("bcrypt");
+const { Races, Classes } = require("../utils/enum");
 
 // CLASS
 class User {

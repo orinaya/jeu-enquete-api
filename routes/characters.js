@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const {characters} = require("../utils/database");
-const {checkTokenMiddleware} = require("../utils/jwt");
+const { characters } = require("../utils/database");
+const { checkTokenMiddleware } = require("../utils/jwt");
 const hal = require("../utils/hal");
+const { ErrorMessages } = require("../utils/enum");
 
 router.get("/characters", checkTokenMiddleware, (req, res, next) => {
   const publicCharacters = characters.map((character) => character.toPublic());
@@ -20,8 +21,11 @@ router.get("/characters/:id(\\d+)", checkTokenMiddleware, (req, res, next) => {
   const publicCharacters = characters.map((character) => character.toPublic());
   const character = publicCharacters.find((character) => character.character_id === id);
 
+  // Personnage non trouvé
   if (character === undefined) {
-    return res.status(404).json({message: "Les personnes n'ont pas été trouvé"});
+    return res.status(404).json({
+      message: ErrorMessages[404]("personnage"),
+    });
   }
 
   res.status(200).json({
@@ -43,11 +47,20 @@ router.get("/characters/:id(\\d+)", checkTokenMiddleware, (req, res, next) => {
 router.delete("/characters/:id(\\d+)", checkTokenMiddleware, (req, res, next) => {
   const id = parseInt(req.params.id, 10);
   const publicCharacters = characters.map((character) => character.toPublic());
-  const character = publicCharacters.find((character) => character.character_id === id);
-  const index = publicCharacters.findIndex((character) => character.character_id === id);
+  const character = publicCharacters.find((char) => char.character_id === id);
+
+  if (!character) {
+    return res.status(404).json({
+      message: ErrorMessages[404]("personnage"),
+    });
+  }
+
+  const index = characters.findIndex((char) => char.character_id === id);
 
   if (index === undefined) {
-    return res.status(404).json({message: "Le personnage n'a pas été trouvé"});
+    return res.status(404).json({
+      message: ErrorMessages[404]("personnage"),
+    });
   }
 
   const removedCharacter = characters.splice(index, 1)[0];
@@ -56,7 +69,7 @@ router.delete("/characters/:id(\\d+)", checkTokenMiddleware, (req, res, next) =>
   if (!removedCharacter.isGuilty) {
     res.status(200).json({
       _links: {
-        self: hal.halLinkObject(`/characters/${character.character_id}`),
+        self: hal.halLinkObject(`/characters/${removedCharacter.character_id}`),
         characters: hal.halLinkObject(`/characters`),
       },
       message: `Oups ! Vous avez tué un innocent : ${removedCharacter.character_name}. Les actes ont des conséquences...`,
@@ -64,7 +77,7 @@ router.delete("/characters/:id(\\d+)", checkTokenMiddleware, (req, res, next) =>
   } else {
     res.status(200).json({
       _links: {
-        self: hal.halLinkObject(`/characters/${character.character_id}`),
+        self: hal.halLinkObject(`/characters/${removedCharacter.character_id}`),
         characters: hal.halLinkObject(`/characters`),
       },
       message: `Bravo ! Vous avez éliminé le coupable : ${removedCharacter.character_name}. L'enquête est terminée.`,

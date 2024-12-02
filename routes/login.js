@@ -4,6 +4,7 @@ const database = require("../utils/database");
 const hal = require("../utils/hal");
 const bcrypt = require("bcrypt");
 const jwt = require("../utils/jwt");
+const { ErrorMessages } = require("../utils/enum");
 
 /**
  * @param {} name
@@ -54,16 +55,8 @@ router.post("/login", (req, res, next) => {
   const isAuthAsCompanion = isAuthentificated(name, password) && isAuthorized(name);
 
   if (!isAuthAsCompanion) {
-    let responseObject = {
-      _links: {
-        self: hal.halLinkObject("/login"),
-      },
-      message: `Vous n'êtes pas membre de la guilde ${toFirstLetterUpperCase(name)}, faites demi tour.`,
-    };
-    res.status(401).format({
-      "application/hal+json": function () {
-        res.send(responseObject);
-      },
+    res.status(401).json({
+      message: `Cet utilisateur (${name}) n'est pas membre de la guilde . Faites demi-tour.`,
     });
   }
 
